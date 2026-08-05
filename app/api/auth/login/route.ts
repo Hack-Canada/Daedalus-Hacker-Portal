@@ -1,10 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
+import bcrypt from "bcryptjs";
 
 import { ApiResponse } from "@/types/api";
+import {
+  createVerificationToken,
+  getVerificationTokenByEmail,
+} from "@/lib/db/queries/email-verification-tokens";
 import { getUserByEmail } from "@/lib/db/queries/user";
+import { sendWelcomeEmail } from "@/lib/emails/ses";
 import { LoginSchema } from "@/lib/validations/login";
+
+async function getEmailVerificationRedirect(email: string, name: string) {
+  const [existingToken] = await getVerificationTokenByEmail(email);
+
+  if (existingToken) {
+    return `/email-verification?token=${existingToken.id}&email=${email}`;
+  }
+
+  const { tokenId, code } = await createVerificationToken(email);
+
+  const result = await sendWelcomeEmail({
+    name,
+    email,
+    subject: "Verify your email address for Hack Canada",
+    token: tokenId,
+    verificationCode: code,
+  });
+
+  if (!result.success) {
+    return null;
+  }
+
+  return `/email-verification?token=${tokenId}&email=${email}`;
+}
 
 export async function POST(
   req: NextRequest,
@@ -31,6 +61,46 @@ export async function POST(
       return NextResponse.json({
         success: false,
         message: "Invalid email or password.",
+      });
+    }
+
+    if (!existingUser.password) {
+      return NextResponse.json({
+        success: false,
+        message: "Invalid email or password.",
+      });
+    }
+
+    const passwordsMatch = await bcrypt.compare(
+      password,
+      existingUser.password,
+    );
+
+    if (!passwordsMatch) {
+      return NextResponse.json({
+        success: false,
+        message: "Invalid email or password.",
+      });
+    }
+
+    // ponytail: Auth.js throws CredentialsSignin when signIn callback returns a redirect URL with redirect:false
+    if (!existingUser.emailVerified) {
+      const redirectUrl = await getEmailVerificationRedirect(
+        existingUser.email,
+        existingUser.name,
+      );
+
+      if (!redirectUrl) {
+        return NextResponse.json({
+          success: false,
+          message: "Could not send verification email. Please try again.",
+        });
+      }
+
+      return NextResponse.json({
+        success: false,
+        message: "Email verification required. Please check your email.",
+        data: { redirect: redirectUrl },
       });
     }
 
