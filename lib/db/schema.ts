@@ -541,3 +541,17 @@ export const profileVisits = pgTable(
 
 export type ProfileVisit = typeof profileVisits.$inferSelect;
 export type NewProfileVisit = typeof profileVisits.$inferInsert;
+
+export const mailingListSubscribers = pgTable("mailingListSubscriber", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  email: text("email").notNull().unique(),
+  createdAt: timestamp("createdAt")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+});
+
+export type MailingListSubscriber = typeof mailingListSubscribers.$inferSelect;
+export type NewMailingListSubscriber =
+  typeof mailingListSubscribers.$inferInsert;
