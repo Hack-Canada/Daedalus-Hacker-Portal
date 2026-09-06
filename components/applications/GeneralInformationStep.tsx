@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { Switch } from "@/components/ui/switch";
 
 import { ethnicities } from "../../lib/data/ethnicities";
 import { genders } from "../../lib/data/genders";
@@ -329,6 +330,26 @@ export function GeneralInformationStep({
         />
         <CountrySelector control={control} name="country" label="Country" />
       </div>
+
+      <FormField
+        control={control}
+        name="isTeam"
+        render={({
+          field,
+        }: {
+          field: ControllerRenderProps<THackerApplicationSubmission, "isTeam">;
+        }) => (
+          <FormItem className="flex items-center justify-between gap-4">
+            <FormLabel className="mb-0">Are you applying as a team?</FormLabel>
+            <FormControl>
+              <Switch
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
     </div>
   );
 }

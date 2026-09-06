@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/auth";
 import { getApplications } from "@/config/applications";
 import { getCurrentPhase } from "@/config/phases";
 import { hackathonYear } from "@/config/site";
+import { getHackerApplicationByUserId } from "@/lib/db/queries/application";
 import { BackButton } from "@/components/ui/back-button";
 import { ApplicationCard } from "@/components/applications/ApplicationCard";
 import PageWrapper from "@/components/PageWrapper";
@@ -40,8 +41,11 @@ const ApplicationPage = async () => {
 
   const alreadyApplied = user.status !== "not_applied";
 
+  // Include the team application card only when the user opted into a team application
+  const hackerApplication = await getHackerApplicationByUserId(user.id);
+
   // Get phase-aware applications and current phase
-  const applications = getApplications();
+  const applications = getApplications(hackerApplication?.isTeam);
   const currentPhase = getCurrentPhase();
 
   return (

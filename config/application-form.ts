@@ -41,4 +41,5 @@ export const DEFAULT_FORM_VALUES = {
   mlhCheckbox3: false,
   resumeUrl: "",
   shareResume: false,
+  isTeam: false,
 };

@@ -184,6 +184,7 @@ export const hackerApplications = pgTable("hackerApplication", {
   mlhCheckbox1: boolean("mlhCheckbox1"),
   mlhCheckbox2: boolean("mlhCheckbox2"),
   mlhCheckbox3: boolean("mlhCheckbox3"),
+  isTeam: boolean("isTeam").notNull().default(false),
   submissionStatus: text("submissionStatus").notNull().default("draft"),
   createdAt: timestamp("createdAt")
     .notNull()

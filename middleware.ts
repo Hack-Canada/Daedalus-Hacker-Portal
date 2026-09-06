@@ -44,5 +44,6 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
+  runtime: "nodejs",
   matcher: ["/((?!static|favicon.ico|_next|.*\\..*|api|trpc).*)", "/"],
 };

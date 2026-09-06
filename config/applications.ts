@@ -1,4 +1,4 @@
-import { HandHelping, Lightbulb, LucideIcon, User } from "lucide-react";
+import { HandHelping, Lightbulb, LucideIcon, User, Users } from "lucide-react";
 
 import { getApplicationDeadline, getCurrentPhase } from "./phases";
 
@@ -46,7 +46,7 @@ function getApplicationStatus(): "open" | "closed" | "coming soon" {
 /**
  * Gets all applications with phase-aware status and deadlines
  */
-export function getApplications(): Application[] {
+export function getApplications(isTeam = false): Application[] {
   const status = getApplicationStatus();
   const hackerDeadline = getApplicationDeadline();
 
@@ -62,6 +62,22 @@ export function getApplications(): Application[] {
       icon: User,
       disabled: status !== "open",
     },
+    // Only shown to applicants who opted into a team application
+    ...(isTeam
+      ? [
+          {
+            title: "Team Applications",
+            href: "/applications/team",
+            status: status,
+            deadline:
+              status === "closed" ? undefined : formatDeadline(hackerDeadline),
+            description:
+              "Applying with a team? Complete your team's application here.",
+            icon: Users,
+            disabled: status !== "open",
+          } as Application,
+        ]
+      : []),
     {
       title: "Mentor & Judge Applications",
       href: "https://forms.gle/tUCGaGi5HgHGQtKD9",

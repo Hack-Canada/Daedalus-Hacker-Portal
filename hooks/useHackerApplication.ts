@@ -58,6 +58,7 @@ function getDefaultValues(
     mlhCheckbox3: existingApplication.mlhCheckbox3 ? true : false,
     resumeUrl: existingApplication.resumeUrl || "",
     shareResume: existingApplication.shareResume ? true : false,
+    isTeam: existingApplication.isTeam ? true : false,
   };
 }
 

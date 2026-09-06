@@ -203,6 +203,7 @@ export const HackerApplicationDraftSchema = z
     mlhCheckbox1: z.boolean().optional(),
     mlhCheckbox2: z.boolean().optional(),
     mlhCheckbox3: z.boolean().optional(),
+    isTeam: z.boolean().optional(),
   })
   .strict();
 
@@ -420,6 +421,7 @@ export const HackerApplicationSubmissionSchema = z
         message: "You must agree to the MLH Privacy Policy and Contest Terms.",
       }),
     mlhCheckbox3: z.boolean(),
+    isTeam: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
     // Require at least one answer

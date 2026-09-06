@@ -17,7 +17,7 @@ export type HackathonPhase =
 // Phase dates - keep HEAD's functional dates
 export const phaseDates = {
   registrationOpen: new Date("2026-02-05T00:00:00-05:00"),
-  registrationClose: new Date("2026-02-28T23:59:59-05:00"),
+  registrationClose: new Date("2026-12-31T23:59:59-05:00"),
   eventStart: new Date("2026-03-06T16:00:00-05:00"),
   eventEnd: new Date("2026-03-08T16:00:00-05:00"),
 } as const;
